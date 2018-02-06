@@ -1,0 +1,5 @@
+UDP example:
+http://www.binarytides.com/udp-socket-programming-in-java/
+
+UDP simple tutorial:
+https://www.geeksforgeeks.org/working-udp-datagramsockets-java/
