@@ -1,46 +1,35 @@
-// Name: Lindun He
-// email:he370@purdue.edu
-// Description: This file is a basic switch implementation for registration.
-//              It sends a REGISTER_REQUEST to Controller when it is initiated.
-//              Then it parses the REGISTER_RESPONSE, which is a list of neighbors,
-//              from controller and stores neighbors' info in hashtable.
-// Example Input: $java Switch 6 2006
-// Console Output:
-//    Switch initiated! ID:6
-//    Port:2006
-//    Attemping to connect to controller 127.0.0.1 on port 5000.
-//    Neighbor0: ID:5 Name:127.0.0.1 Port:2005
-//    Neighbor1: ID:3 Name:127.0.0.1 Port:2002
-//    Neighbor2: ID:1 Name:127.0.0.1 Port:2000
-//    Neighbor3: ID:4 Name:127.0.0.1 Port:2004
-//    Neighbor4: ID:2 Name:127.0.0.1 Port:2001
-//    Switch 6 registered to controller 127.0.0.1
-//
-
 import java.io.*;
 import java.net.*;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.lang.Thread;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Switch {
    private static int activeFlag = 1;
    private static int switchID;
    private static int switchPort;
 
-   private static DatagramSock receiverSock = null;
-   private static DatagramSock senderSock = null;
+   private static DatagramSocket receiverSock = null;
+   private static DatagramSocket senderSock = null;
 
    private static String controllerHostname;
 
    private static Hashtable<Integer, ArrayList<String>> neighbors = new Hashtable<Integer, ArrayList<String>>();
 
+   private static Timer timer;
+   private static long period = 2*1000;
+
    public static void main(String []args) throws Exception{
      switchID = Integer.parseInt(args[0]);
      switchPort = Integer.parseInt(args[1]);
 
-     System.out.println("Switch initiated! ID:" + Integer.toString(switchID));
+     System.out.println("Switch initiating! ID:" + Integer.toString(switchID));
      System.out.println("Port:" + Integer.toString(switchPort));
 
      controllerHostname = new String ("127.0.0.1");
@@ -53,19 +42,24 @@ public class Switch {
 
        InetAddress controllerHost = InetAddress.getByName(controllerHostname);
 
+       timer = new Timer();
+       Calendar calendar= Calendar.getInstance();
+       Date startTime = calendar.getTime();
+       timer.schedule(new SwitchTimerTask(receiverSock,senderSock), startTime, period);
+
        // must be registered before everything
        int switchRegistered = 0;
        while(switchRegistered!=1){
          try{
            // request look like: "id 127.0.0.1 2000 1 EOF/n" <-- id, host, port, flag(live or not?)
-           String registerRequest = Integer.toString(switchID)+" "+"127.0.0.1"+" "+Integer.toString(switchPort)+" "+Integer.toString(activeFlag)+" EOF\n";
+           String registerRequest = "0 " + Integer.toString(switchID)+" "+"127.0.0.1"+" "+Integer.toString(switchPort)+" "+Integer.toString(activeFlag)+" EOF\n";
            byte[] buffer = registerRequest.getBytes();
            DatagramPacket  dp = new DatagramPacket(buffer , buffer.length , controllerHost , 5000);
            senderSock.send(dp);
 
            byte[] packetBuffer = new byte[65536];
            DatagramPacket responsePacket = new DatagramPacket(packetBuffer, packetBuffer.length);
-           sock.receive(responsePacket);
+           receiverSock.receive(responsePacket);
 
            byte[] responseData = responsePacket.getData();
            String registerResponse= new String(responseData, 0, responsePacket.getLength());
@@ -86,6 +80,12 @@ public class Switch {
      // switch registered!
      System.out.println ("Switch " + Integer.toString(switchID) + " registered to controller " + controllerHostname);
 
+     // Timer Thread
+
+
+
+     // Switch Console
+
      BufferedReader cin = new BufferedReader(new InputStreamReader(System.in));
      try
      {
@@ -96,7 +96,7 @@ public class Switch {
              String command = (String)cin.readLine();
 
              //echo the details of incoming data - client ip : client port - client message
-             System.out.println ("[Switch Console ID("+ Integer.toString(switchID) +")]>>");s
+             System.out.println ("[Switch Console ID("+ Integer.toString(switchID) +")]>>");
          }
      }
 
@@ -107,10 +107,13 @@ public class Switch {
 
    }
 
+
    // neighbors format: "id1 127.0.0.1 2000 1 id2 ..... EOF/n"
    public static boolean processReceiveResponse(String response) throws IOException {
      String[] words = response.split(" ");
-     if((words.length-1)%4!=0){
+
+     if(words[0]!="0"||(words.length-2)%4!=0){
+       System.out.println ("Invalid REGISTER_RESPONSE string!");
        return false;
      }
 
@@ -127,4 +130,16 @@ public class Switch {
 
      return true;
    }
+}
+
+class SwitchTimerTask extends TimerTask {
+  DatagramSocket receiver;
+  DatagramSocket sender;
+  SwitchTimerTask(DatagramSocket s1,DatagramSocket s2) {
+      this.receiver = s1;
+      this.sender = s2;
+  }
+  public void run() {
+    System.out.println("Working...");
+  }
 }
