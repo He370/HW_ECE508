@@ -8,7 +8,11 @@ Switch:
 2. jar cvfm Switch.jar manifest_switch.txt Switch.class SwitchSockHandler.class SwitchTimerTask.class
 3. java -cp Switch.jar Switch 1 2000
 
+./s.sh 1 2000
+
 UDP_Server
 1. javac udp_server.java
 2. jar cvfm udp_server.jar manifest.txt udp_server.class DijkstraAlgorithm.class Edge.class Graph.class Read.class Vertex.class
 3. java -cp udp_server.jar udp_server
+
+./c.sh
