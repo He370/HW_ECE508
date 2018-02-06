@@ -9,18 +9,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 public class Switch {
    private static int activeFlag = 1;
-   private static int switchID;
+   public static int switchID;
    private static int switchPort;
 
    private static DatagramSocket receiverSock = null;
    private static DatagramSocket senderSock = null;
 
-   private static String controllerHostname;
+   public static String controllerHostname;
 
-   private static Hashtable<Integer, ArrayList<String>> neighbors = new Hashtable<Integer, ArrayList<String>>();
+   public static Hashtable<Integer, ArrayList<String>> neighbors = new Hashtable<Integer, ArrayList<String>>();
+   public static Hashtable<Integer, Integer> neighborStatus = new Hashtable<Integer, Integer>();
+   public static ArrayList<Integer> routeTable = new ArrayList<Integer>();;
 
    private static Timer timer;
    private static long period = 2*1000;
@@ -42,11 +45,6 @@ public class Switch {
 
        InetAddress controllerHost = InetAddress.getByName(controllerHostname);
 
-       timer = new Timer();
-       Calendar calendar= Calendar.getInstance();
-       Date startTime = calendar.getTime();
-       timer.schedule(new SwitchTimerTask(receiverSock,senderSock), startTime, period);
-
        // must be registered before everything
        int switchRegistered = 0;
        while(switchRegistered!=1){
@@ -55,7 +53,7 @@ public class Switch {
            String registerRequest = "0 " + Integer.toString(switchID)+" "+"127.0.0.1"+" "+Integer.toString(switchPort)+" "+Integer.toString(activeFlag)+" EOF\n";
            byte[] buffer = registerRequest.getBytes();
            DatagramPacket  dp = new DatagramPacket(buffer , buffer.length , controllerHost , 5000);
-           senderSock.send(dp);
+           receiverSock.send(dp);
 
            byte[] packetBuffer = new byte[65536];
            DatagramPacket responsePacket = new DatagramPacket(packetBuffer, packetBuffer.length);
@@ -82,7 +80,10 @@ public class Switch {
 
      // Timer Thread
 
-
+     timer = new Timer();
+     Calendar calendar= Calendar.getInstance();
+     Date startTime = calendar.getTime();
+     timer.schedule(new SwitchTimerTask(senderSock), startTime, period);
 
      // Switch Console
 
@@ -107,25 +108,27 @@ public class Switch {
 
    }
 
-
-   // neighbors format: "id1 127.0.0.1 2000 1 id2 ..... EOF/n"
+   // neighbors format: "1 id1 127.0.0.1 2000 1 id2 ..... EOF/n"
    public static boolean processReceiveResponse(String response) throws IOException {
      String[] words = response.split(" ");
 
-     if(words[0]!="0"||(words.length-2)%4!=0){
+     System.out.println (response);
+
+     if(words[0]!="1"||(words.length-2)%4!=0){
        System.out.println ("Invalid REGISTER_RESPONSE string!");
        return false;
      }
 
-     for(int i = 0; i < (words.length-1)/4 ; i+=1){
-       String id = words[i*4];
+     for(int i = 0; i < (words.length-2)/4 ; i+=1){
+       String id = words[1+i*4];
        ArrayList<String> nodeInfo = new ArrayList<String>();
        System.out.println ("Neighbor"+ Integer.toString(i)+": ID:" + words[i*4] + " Name:"
                           + words[(i*4)+1] + " Port:" + words[(i*4)+2]);
-       nodeInfo.add(0,words[(i*4)+1]);
-       nodeInfo.add(1,words[(i*4)+2]);
-       nodeInfo.add(2,words[(i*4)+3]);
+       nodeInfo.add(0,words[1+(i*4)+1]);
+       nodeInfo.add(1,words[1+(i*4)+2]);
+       nodeInfo.add(2,words[1+(i*4)+3]);
        neighbors.put(Integer.parseInt(id), nodeInfo);
+       neighborStatus.put(Integer.parseInt(id), -1);
      }
 
      return true;
@@ -133,13 +136,25 @@ public class Switch {
 }
 
 class SwitchTimerTask extends TimerTask {
-  DatagramSocket receiver;
   DatagramSocket sender;
-  SwitchTimerTask(DatagramSocket s1,DatagramSocket s2) {
-      this.receiver = s1;
-      this.sender = s2;
+  String hostName = Switch.controllerHostname;
+  SwitchTimerTask(DatagramSocket s) {
+      this.sender = s;
   }
   public void run() {
-    System.out.println("Working...");
+
+    System.out.println("Sending..." + hostName);
+    Set<Integer> ids = Switch.neighbors.keySet();
+    for(Integer id : ids){
+        //ArrayList<String> nodeInfo = Switch.neighbors.get(id);
+        //InetAddress nodeHost = InetAddress.getByName(nodeInfo.get(1));
+        //int nodePort = Integer.parseInt(nodeInfo.get(2));
+
+        //String keepAlive = "2 " + Integer.toString(Switch.switchID) + " EOF\n";
+        //byte[] buffer = keepAlive.getBytes();
+        //DatagramPacket  dp = new DatagramPacket(buffer , buffer.length , nodeHost , nodePort);
+        //this.sender.send(dp);
+
+    }
   }
 }

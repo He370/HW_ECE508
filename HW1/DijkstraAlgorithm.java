@@ -1,4 +1,4 @@
-package Dijkstra;
+//package Dijkstra;
 import java.util.*;
 public class DijkstraAlgorithm {
 
@@ -76,7 +76,7 @@ public class DijkstraAlgorithm {
         return neighbors;
     }
 
-    
+
 
     private boolean isSettled(Vertex vertex) {
         return settledNodes.contains(vertex);

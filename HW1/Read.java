@@ -1,4 +1,4 @@
-package ReadFile;
+//package ReadFile;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,10 +15,10 @@ import java.util.List;
 
 import javax.swing.text.AbstractDocument.Content;
 
-import Dijkstra.DijkstraAlgorithm;
-import Dijkstra.Edge;
-import Dijkstra.Graph;
-import Dijkstra.Vertex;
+//import Dijkstra.DijkstraAlgorithm;
+//import Dijkstra.Edge;
+//import Dijkstra.Graph;
+//import Dijkstra.Vertex;
 
 public class Read {
 	List<Vertex> nodes;
@@ -31,13 +31,13 @@ public class Read {
 	public Hashtable<String, HashSet<String>> getNeighbors() throws IOException{
 		Hashtable<String, HashSet<String>> neighbors = new Hashtable<>();
 		ArrayList<String> answer = new ArrayList<>();
-		String filePath = "src/txt/test.txt";
+		String filePath = "test.txt";
 		 File file = new File(filePath);
-		 FileInputStream inputStream = new FileInputStream(filePath);  
-	     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));  
-	     String str = null;  
-	        while((str = bufferedReader.readLine()) != null)  
-	        {  
+		 FileInputStream inputStream = new FileInputStream(filePath);
+	     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+	     String str = null;
+	        while((str = bufferedReader.readLine()) != null)
+	        {
 	        	answer.add(str);
 	        }
 	        for(int r = 0; r < answer.size(); r++) {
@@ -45,7 +45,7 @@ public class Read {
 	        	int start = Integer.valueOf(row[0]) ;
 	        	int end = Integer.valueOf(row[1]);
 	        	if(start >= top) top = start;
-	        	if(end >= top) top = end;	
+	        	if(end >= top) top = end;
 	        }
 	        for(int i = 0; i <= top; i++) {
 	        	neighbors.put(String.valueOf(i), new HashSet<String>());
@@ -58,26 +58,26 @@ public class Read {
 	        	neighbors.get(end).add(start);
 	        }
 	        return neighbors;
-	} 
+	}
 	public ArrayList<String> read() throws IOException {
 		ArrayList<String> routing_tab = new ArrayList<>();
 		ArrayList<String> answer = new ArrayList<>();
 		String filePath = "src/txt/test.txt";
 		 File file = new File(filePath);
-		 FileInputStream inputStream = new FileInputStream(filePath);  
-	     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));  
-	     String str = null;  
-	        while((str = bufferedReader.readLine()) != null)  
-	        {  
+		 FileInputStream inputStream = new FileInputStream(filePath);
+	     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+	     String str = null;
+	        while((str = bufferedReader.readLine()) != null)
+	        {
 	        	answer.add(str);
-	        }  
+	        }
 	        for(int r = 0; r < answer.size(); r++) {
 	        	String[] row = answer.get(r).split(" ");
 	        	int start = Integer.valueOf(row[0]) ;
 	        	int end = Integer.valueOf(row[1]);
 	        	if(start >= top) top = start;
 	        	if(end >= top) top = end;
-	        	
+
 	        }
 
 	    for(int i = 0; i <= top; i++) {
@@ -89,7 +89,7 @@ public class Read {
         	addLane(Integer.valueOf(row[0]), Integer.valueOf(row[1]), Integer.valueOf(row[2]));
         	addLane(Integer.valueOf(row[1]), Integer.valueOf(row[0]), Integer.valueOf(row[2]));
         }
-        
+
         Graph graph = new Graph(nodes, edges);
         for(int i = 0; i <= top ; i++) {
         	DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
@@ -102,7 +102,7 @@ public class Read {
        	        	routing_tab.set(i, message);
        	        	System.out.println("the path from source " + i +" to destination " + j + "is: ");
        	        	System.out.println("null");
-       	        	
+
        	        }
        	        else if(path.size() > 0){
        	        	String message = routing_tab.get(i)  + path.get(1).getId()+ " ";
@@ -110,15 +110,15 @@ public class Read {
        	        	System.out.println("the path from source " + i +" to destination " + j + "is: ");
        	        	for (Vertex vertex : path) {
 		 	            System.out.print("Node: "+ vertex.getId());
-		 	            System.out.print(" ");   
+		 	            System.out.print(" ");
 		 	        }
-       	        	System.out.println("");	
+       	        	System.out.println("");
        	        }
         	}
         }
         return routing_tab;
 	}
-	
+
 	public void addLane(int sourceLocNo, int destLocNo,
 	            int duration) {
 	        Edge lane = new Edge(nodes.get(sourceLocNo), nodes.get(destLocNo), duration);

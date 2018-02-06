@@ -1,4 +1,4 @@
-package Dijkstra;
+//package Dijkstra;
 
 public class Vertex {
     public  String id;
@@ -46,6 +46,6 @@ public class Vertex {
     public String toString() {
         return name;
     }
-   
+
 
 }
