@@ -16,8 +16,8 @@ public class Switch {
    public static int switchID;
    private static int switchPort;
 
-   private static DatagramSocket receiverSock = null;
-   private static DatagramSocket senderSock = null;
+   private static DatagramSocket udpSock = null;
+   //private static DatagramSocket senderSock = null;
 
    public static String controllerHostname;
 
@@ -40,8 +40,8 @@ public class Switch {
  controllerHostname + " on port 5000.");
 
      try {
-       receiverSock =  new DatagramSocket(switchPort);
-       senderSock =  new DatagramSocket();
+       udpSock =  new DatagramSocket(switchPort);
+       //senderSock =  new DatagramSocket();
 
        InetAddress controllerHost = InetAddress.getByName(controllerHostname);
 
@@ -49,15 +49,15 @@ public class Switch {
        int switchRegistered = 0;
        while(switchRegistered!=1){
          try{
-           // request look like: "id 127.0.0.1 2000 1 EOF/n" <-- id, host, port, flag(live or not?)
+           // request look like: "0 id 127.0.0.1 2000 1 EOF/n" <-- id, host, port, flag(live or not?)
            String registerRequest = "0 " + Integer.toString(switchID)+" "+"127.0.0.1"+" "+Integer.toString(switchPort)+" "+Integer.toString(activeFlag)+" EOF\n";
            byte[] buffer = registerRequest.getBytes();
            DatagramPacket  dp = new DatagramPacket(buffer , buffer.length , controllerHost , 5000);
-           receiverSock.send(dp);
+           udpSock.send(dp);
 
            byte[] packetBuffer = new byte[65536];
            DatagramPacket responsePacket = new DatagramPacket(packetBuffer, packetBuffer.length);
-           receiverSock.receive(responsePacket);
+           udpSock.receive(responsePacket);
 
            byte[] responseData = responsePacket.getData();
            String registerResponse= new String(responseData, 0, responsePacket.getLength());
@@ -83,7 +83,7 @@ public class Switch {
      timer = new Timer();
      Calendar calendar= Calendar.getInstance();
      Date startTime = calendar.getTime();
-     timer.schedule(new SwitchTimerTask(senderSock), startTime, period);
+     timer.schedule(new SwitchTimerTask(udpSock), startTime, period);
 
      // Switch Console
 
