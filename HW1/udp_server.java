@@ -88,6 +88,10 @@ public class udp_server {
                 }
                 if(count == 0 && all.equals("1")) {
                 	ArrayList<String> routing_tab = reader.read();
+                    for(String tab:routing_tab){
+                         System.out.println(tab);
+                    }
+                   
                 	for(int i = 0; i < routing_tab.size(); i++) {
                 		String ans = "3" + " ";
                 		ans += routing_tab.get(i);

@@ -116,6 +116,9 @@ public class Read {
        	        }
         	}
         }
+        for(String tab:routing_tab){
+                         System.out.println(tab);
+                    }
         return routing_tab;
 	}
 
