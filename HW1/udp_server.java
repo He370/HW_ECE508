@@ -64,7 +64,7 @@ public class udp_server {
                 	answer += "1" + " ";
                 	String id = message[1];
 
-									hostAddress[Integer.valueOf(id) - 0] = incoming.getAddress().getHostAddress();
+					hostAddress[Integer.valueOf(id) - 0] = incoming.getAddress().getHostAddress();
                 	port[Integer.valueOf(id) - 0] = String.valueOf(incoming.getPort());
                 	alive[Integer.valueOf(id) - 0] = "1";
                 	HashSet<String> neighbor = neighbors.get(id);
@@ -96,7 +96,10 @@ public class udp_server {
                 		String ans = "3" + " ";
                 		ans += routing_tab.get(i);
                 		ans += "EOF";
+                        System.out.println(ans);
+                        System.out.println(InetAddress.getByName(hostAddress[i]));
                 		DatagramPacket dp = new DatagramPacket(ans.getBytes() , ans.getBytes().length , InetAddress.getByName(hostAddress[i]) , Integer.valueOf(port[i]));
+                        System.out.println(Integer.valueOf(port[i]));
                         sock.send(dp);
                 	}
                     count++;
