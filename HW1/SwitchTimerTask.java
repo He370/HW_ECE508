@@ -20,26 +20,25 @@ class SwitchTimerTask extends TimerTask {
   }
   public void run() {
 
-    System.out.println("Sending..." + hostName);
+    System.out.println("[Sender]Sending..." + hostName);
     Set<Integer> ids = Switch.neighbors.keySet();
     for(Integer id : ids){
       try{
         ArrayList<String> nodeInfo = Switch.neighbors.get(id);
 
-        if(!nodeInfo.get(1).equals("NULL")){
-          System.out.println("Sending KEEP_ALIVE to node "+ nodeInfo.get(0) + " | " + nodeInfo.get(1));
-
-          InetAddress nodeHost = InetAddress.getByName(nodeInfo.get(1));
+        if(nodeInfo.get(1).equals("NULL")==false){
+          System.out.println("[Sender]Sending KEEP_ALIVE to node "+ Integer.toString(id) + " | " + nodeInfo.get(0));
+          InetAddress nodeHost = InetAddress.getByName(nodeInfo.get(0));
           int nodePort = Integer.parseInt(nodeInfo.get(2));
 
-          String keepAlive = "2 " + Integer.toString(Switch.switchID) + " EOF\n";
+          String keepAlive = "[Sender]msg:2 " + Integer.toString(Switch.switchID) + " EOF\n";
           byte[] buffer = keepAlive.getBytes();
           DatagramPacket  dp = new DatagramPacket(buffer , buffer.length , nodeHost , nodePort);
           this.sender.send(dp);
         }
 
       } catch (Exception e) {
-          System.err.println("Exception caught:" + e);
+          System.err.println("[Sender]Exception caught:" + e);
           System.exit(1);
       }
 
