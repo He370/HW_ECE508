@@ -70,6 +70,7 @@ public class udp_server {
                 	HashSet<String> neighbor = neighbors.get(id);
                 	for(String n: neighbor) {
                 		int n_id = Integer.valueOf(n);
+                        answer = answer + n + " ";
                 		answer = answer + hostAddress[n_id] + " ";
                 		answer = answer + port[n_id] + " ";
                 		answer = answer + alive[n_id] + " ";
