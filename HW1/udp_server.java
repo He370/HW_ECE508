@@ -76,17 +76,17 @@ public class udp_server {
                 		answer = answer + alive[n_id] + " ";
                 	}
                 	answer += "EOF";
-									echo("ans:" + answer);
+				echo("ans:" + answer);
                 	DatagramPacket dp = new DatagramPacket(answer.getBytes() , answer.getBytes().length , incoming.getAddress() , incoming.getPort());
                   sock.send(dp);
                 }
                 String all = "1";
                 for(String a: alive) {
-                	if(a == "0") {
+                	if(a.equals("0")) {
                 		all = "0";
                 	}
                 }
-                if(count == 0 && all == "1") {
+                if(count == 0 && all.equals("1")) {
                 	ArrayList<String> routing_tab = reader.read();
                 	for(int i = 0; i < routing_tab.size(); i++) {
                 		String ans = "3" + " ";
@@ -95,6 +95,7 @@ public class udp_server {
                 		DatagramPacket dp = new DatagramPacket(ans.getBytes() , ans.getBytes().length , InetAddress.getByName(hostAddress[i]) , Integer.valueOf(port[i]));
                         sock.send(dp);
                 	}
+                    count++;
                 }
             }
         }
