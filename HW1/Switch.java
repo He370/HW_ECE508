@@ -95,7 +95,6 @@ public class Switch {
              //take input and send the packet
              System.out.println ("[Switch Console ID("+ Integer.toString(switchID) +")]>>");
              String command = (String)cin.readLine();
-
              //echo the details of incoming data - client ip : client port - client message
              System.out.println ("[Switch Console ID("+ Integer.toString(switchID) +")]>>");
          }
@@ -114,7 +113,7 @@ public class Switch {
 
      System.out.println (response);
 
-     if(words[0]!="1"||(words.length-2)%4!=0){
+     if((!words[0].equals("1"))||(words.length-2)%4!=0){
        System.out.println ("Invalid REGISTER_RESPONSE string!");
        return false;
      }
@@ -122,8 +121,8 @@ public class Switch {
      for(int i = 0; i < (words.length-2)/4 ; i+=1){
        String id = words[1+i*4];
        ArrayList<String> nodeInfo = new ArrayList<String>();
-       System.out.println ("Neighbor"+ Integer.toString(i)+": ID:" + words[i*4] + " Name:"
-                          + words[(i*4)+1] + " Port:" + words[(i*4)+2]);
+       System.out.println ("Neighbor"+ Integer.toString(i)+": ID:" + words[1+i*4] + " Name:"
+                          + words[1+(i*4)+1] + " Port:" + words[1+(i*4)+2]);
        nodeInfo.add(0,words[1+(i*4)+1]);
        nodeInfo.add(1,words[1+(i*4)+2]);
        nodeInfo.add(2,words[1+(i*4)+3]);
@@ -146,14 +145,26 @@ class SwitchTimerTask extends TimerTask {
     System.out.println("Sending..." + hostName);
     Set<Integer> ids = Switch.neighbors.keySet();
     for(Integer id : ids){
-        //ArrayList<String> nodeInfo = Switch.neighbors.get(id);
-        //InetAddress nodeHost = InetAddress.getByName(nodeInfo.get(1));
-        //int nodePort = Integer.parseInt(nodeInfo.get(2));
+      try{
+        ArrayList<String> nodeInfo = Switch.neighbors.get(id);
+        /*
+        if(!nodeInfo.get(1).equals("NULL")){
+          System.out.println("Sending KEEP_ALIVE to node "+ nodeInfo.get(0) + " | " + nodeInfo.get(1));
 
-        //String keepAlive = "2 " + Integer.toString(Switch.switchID) + " EOF\n";
-        //byte[] buffer = keepAlive.getBytes();
-        //DatagramPacket  dp = new DatagramPacket(buffer , buffer.length , nodeHost , nodePort);
-        //this.sender.send(dp);
+          InetAddress nodeHost = InetAddress.getByName(nodeInfo.get(1));
+          int nodePort = Integer.parseInt(nodeInfo.get(2));
+
+          String keepAlive = "2 " + Integer.toString(Switch.switchID) + " EOF\n";
+          byte[] buffer = keepAlive.getBytes();
+          DatagramPacket  dp = new DatagramPacket(buffer , buffer.length , nodeHost , nodePort);
+          this.sender.send(dp);
+        }
+        */
+
+      } catch (Exception e) {
+          System.err.println("Exception caught:" + e);
+          System.exit(1);
+      }
 
     }
   }
