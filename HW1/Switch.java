@@ -127,6 +127,7 @@ public class Switch {
              if(words[0].equals("b")){
                int blockID = Integer.parseInt(words[1]);
                blockStatus.put(blockID,0);
+               System.out.println ("[Console]:Blocked link to " + words[1]);
              }
 
              // print tables:
