@@ -40,17 +40,11 @@ public class Read {
 	        {
 	        	answer.add(str);
 	        }
-	        for(int r = 0; r < answer.size(); r++) {
-	        	String[] row = answer.get(r).split(" ");
-	        	int start = Integer.valueOf(row[0]) ;
-	        	int end = Integer.valueOf(row[1]);
-	        	if(start >= top) top = start;
-	        	if(end >= top) top = end;
-	        }
-	        for(int i = 0; i <= top; i++) {
+	         top = Integer.valueOf(answer.get(0));
+	        for(int i = 1; i <= top; i++) {
 	        	neighbors.put(String.valueOf(i), new HashSet<String>());
 	        }
-	        for(int r = 0; r < answer.size(); r++) {
+	        for(int r = 1; r < answer.size(); r++) {
 	        	String[] row = answer.get(r).split(" ");
 	        	String start = (row[0]) ;
 	        	String end = (row[1]);
@@ -58,6 +52,24 @@ public class Read {
 	        	neighbors.get(end).add(start);
 	        }
 	        return neighbors;
+	        // for(int r = 0; r < answer.size(); r++) {
+	        // 	String[] row = answer.get(r).split(" ");
+	        // 	int start = Integer.valueOf(row[0]) ;
+	        // 	int end = Integer.valueOf(row[1]);
+	        // 	if(start >= top) top = start;
+	        // 	if(end >= top) top = end;
+	        // }
+	        // for(int i = 0; i <= top; i++) {
+	        // 	neighbors.put(String.valueOf(i), new HashSet<String>());
+	        // }
+	        // for(int r = 0; r < answer.size(); r++) {
+	        // 	String[] row = answer.get(r).split(" ");
+	        // 	String start = (row[0]) ;
+	        // 	String end = (row[1]);
+	        // 	neighbors.get(start).add(end);
+	        // 	neighbors.get(end).add(start);
+	        // }
+	        // return neighbors;
 	}
 	public ArrayList<String> read() throws IOException {
 		ArrayList<String> routing_tab = new ArrayList<>();
@@ -71,43 +83,52 @@ public class Read {
 	        {
 	        	answer.add(str);
 	        }
-	        for(int r = 0; r < answer.size(); r++) {
-	        	String[] row = answer.get(r).split(" ");
-	        	int start = Integer.valueOf(row[0]) ;
-	        	int end = Integer.valueOf(row[1]);
-	        	if(start >= top) top = start;
-	        	if(end >= top) top = end;
+	    //     for(int r = 0; r < answer.size(); r++) {
+	    //     	String[] row = answer.get(r).split(" ");
+	    //     	int start = Integer.valueOf(row[0]) ;
+	    //     	int end = Integer.valueOf(row[1]);
+	    //     	if(start >= top) top = start;
+	    //     	if(end >= top) top = end;
 
-	        }
+	    //     }
 
-	    for(int i = 0; i <= top; i++) {
+	    // for(int i = 0; i <= top; i++) {
+	    //     	Vertex location = new Vertex(String.valueOf(i), "Node_" + i);
+	    //         nodes.add(location);
+	    // }
+     //    for(int r = 0; r < answer.size(); r++) {
+     //    	String[] row = answer.get(r).split(" ");
+     //    	addLane(Integer.valueOf(row[0]), Integer.valueOf(row[1]), Integer.valueOf(row[2]));
+     //    	addLane(Integer.valueOf(row[1]), Integer.valueOf(row[0]), Integer.valueOf(row[2]));
+     //    }
+	    top = Integer.valueOf(answer.get(0));
+	    for(int i = 1; i <= top; i++) {
 	        	Vertex location = new Vertex(String.valueOf(i), "Node_" + i);
 	            nodes.add(location);
 	    }
-        for(int r = 0; r < answer.size(); r++) {
+        for(int r = 1; r < answer.size(); r++) {
         	String[] row = answer.get(r).split(" ");
-        	addLane(Integer.valueOf(row[0]), Integer.valueOf(row[1]), Integer.valueOf(row[2]));
-        	addLane(Integer.valueOf(row[1]), Integer.valueOf(row[0]), Integer.valueOf(row[2]));
+        	addLane(Integer.valueOf(row[0]), Integer.valueOf(row[1]), Integer.valueOf(row[3]));
+        	addLane(Integer.valueOf(row[1]), Integer.valueOf(row[0]), Integer.valueOf(row[3]));
         }
-
         Graph graph = new Graph(nodes, edges);
-        for(int i = 0; i <= top ; i++) {
+        for(int i = 0; i < top ; i++) {
         	DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
         	dijkstra.run_dij(nodes.get(i));
         	routing_tab.add("");
-        	for(int j = 0; j <= top; j++) {
+        	for(int j = 0; j < top; j++) {
        	        LinkedList<Vertex> path = dijkstra.getPath(nodes.get(j));
        	        if(path == null) {
        	        	String message = routing_tab.get(i)  + "-1"+ " ";
        	        	routing_tab.set(i, message);
-       	        	System.out.println("the path from source " + i +" to destination " + j + "is: ");
+       	        	System.out.println("the path from source " + (i + 1) +" to destination " + (j + 1) + "is: ");
        	        	System.out.println("null");
 
        	        }
        	        else if(path.size() > 0){
        	        	String message = routing_tab.get(i)  + path.get(1).getId()+ " ";
        	        	routing_tab.set(i, message);
-       	        	System.out.println("the path from source " + i +" to destination " + j + "is: ");
+       	        	System.out.println("the path from source " + (i + 1) +" to destination " + (j + 1) + "is: ");
        	        	for (Vertex vertex : path) {
 		 	            System.out.print("Node: "+ vertex.getId());
 		 	            System.out.print(" ");

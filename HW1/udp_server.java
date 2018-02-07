@@ -62,19 +62,19 @@ public class udp_server {
 								echo("msg:"+message[0]);
 
                 if(message[0].equals("0")) {
-                	answer += "1" + " ";
+                	answer += "responding from Server: " + "1" + " ";
                 	String id = message[1];
 
-					hostAddress[Integer.valueOf(id) - 0] = incoming.getAddress().getHostAddress();
-                	port[Integer.valueOf(id) - 0] = String.valueOf(incoming.getPort());
-                	alive[Integer.valueOf(id) - 0] = "1";
+					hostAddress[Integer.valueOf(id) - 1] = incoming.getAddress().getHostAddress();
+                	port[Integer.valueOf(id) - 1] = String.valueOf(incoming.getPort());
+                	alive[Integer.valueOf(id) - 1] = "1";
                 	HashSet<String> neighbor = neighbors.get(id);
                 	for(String n: neighbor) {
                 		int n_id = Integer.valueOf(n);
                         answer = answer + n + " ";
-                		answer = answer + hostAddress[n_id] + " ";
-                		answer = answer + port[n_id] + " ";
-                		answer = answer + alive[n_id] + " ";
+                		answer = answer + hostAddress[n_id - 1] + " ";
+                		answer = answer + port[n_id - 1] + " ";
+                		answer = answer + alive[n_id - 1] + " ";
                 	}
                 	answer += "EOF";
 				echo("ans:" + answer);
@@ -94,7 +94,7 @@ public class udp_server {
                     }
                    
                 	for(int i = 0; i < routing_tab.size(); i++) {
-                		String ans = "3" + " ";
+                		String ans = "responding from Server: " + "3" + " ";
                 		ans += routing_tab.get(i);
                 		ans += "EOF";
                         System.out.println(ans);
@@ -108,7 +108,7 @@ public class udp_server {
                  /////////////////////////////////////////////////////////////////////////////////////////
 
                 if(count > 0 && message[0].equals("4")) {
-                    System.out.println("receiving dis_connect message");
+                    System.out.println("receiving dis_connect message from Switch:");
                     String id = message[1];
                     ArrayList<String> unreach = new ArrayList<>();
 
@@ -139,14 +139,14 @@ public class udp_server {
                                     if(path == null) {
                                         String mes = routing_tab.get(i)  + "-1"+ " ";
                                         routing_tab.set(i, mes);
-                                        System.out.println("the path from source " + i +" to destination " + j + "is: ");
+                                        System.out.println("the path from source " + (i + 1) +" to destination " + (j + 1) + "is: ");
                                         System.out.println("null");
                                         
                                     }
                                     else if(path.size() > 0){
                                         String mes = routing_tab.get(i)  + path.get(1).getId()+ " ";
                                         routing_tab.set(i, mes);
-                                        System.out.println("the path from source " + i +" to destination " + j + "is: ");
+                                        System.out.println("the path from source " + (i + 1) +" to destination " + (j + 1) + "is: ");
                                         for (Vertex vertex : path) {
                                             System.out.print("Node: "+ vertex.getId());
                                             System.out.print(" ");   
@@ -156,7 +156,7 @@ public class udp_server {
                                 }
                             }
                          for(int i = 0; i < routing_tab.size(); i++) {
-                            String ans = "3" + " ";
+                            String ans = "Rerouting table is: " + "3" + " ";
                             ans += routing_tab.get(i);
                             ans += "EOF";
                             System.out.println(ans);
