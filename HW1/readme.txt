@@ -1,6 +1,6 @@
 Team:
-Lindun He  email: he370@purdue.edu
-Peilun Qi  email: qi66@purdue.edu
+Lindun He  email: he370@purdue.edu Implemented Switch Part
+Peilun Qi  email: qi66@purdue.edu Implemented Controller part and Dijkstra Algorithm
 
 (1) Compile & Run:
 
