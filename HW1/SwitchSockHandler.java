@@ -24,10 +24,7 @@ class SwitchSockHandler extends Thread {
         byte[] packetBuffer = new byte[65536];
         DatagramPacket responsePacket = new DatagramPacket(packetBuffer, packetBuffer.length);
         sock.receive(responsePacket);
-
-        byte[] responseData = responsePacket.getData();
-        String registerResponse= new String(responseData, 0, responsePacket.getLength());
-        parseResponse(registerResponse);
+        parseResponse(responsePacket);
       }
     }
     catch (Exception e) {
@@ -35,8 +32,25 @@ class SwitchSockHandler extends Thread {
     }
   }
 
-  private void parseResponse(String s){
-    System.out.println("[Receiver]Response:"+s);
+  private void parseResponse(DatagramPacket responsePacket){
+    byte[] responseData = responsePacket.getData();
+    String registerResponse= new String(responseData, 0, responsePacket.getLength());
+
+    System.out.println("[Receiver]Response:"+registerResponse);
+    String[] words = registerResponse.split(" ");
+
+    if(words[0].equals("2")){
+      System.out.println("[Receiver]Receive KEEP_ALIVE from "+ words[1]);
+      int id = Integer.parseInt(words[1]);
+      Switch.neighborStatus.put(id,0);
+      ArrayList<String> nodeInfo = Switch.neighbors.get(id);
+      nodeInfo.set(0,responsePacket.getAddress().getHostAddress());
+      nodeInfo.set(1,Integer.toString(responsePacket.getPort()));
+      Switch.neighbors.put(id,nodeInfo);
+    }
+    else if(words[1].equals("3")){
+
+    }
   }
 
 }

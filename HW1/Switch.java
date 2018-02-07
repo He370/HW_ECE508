@@ -14,7 +14,7 @@ import java.util.Set;
 public class Switch {
    private static int activeFlag = 1;
    public static int switchID;
-   private static int switchPort;
+   public static int switchPort;
 
    private static DatagramSocket udpSock = null;
    //private static DatagramSocket senderSock = null;
@@ -132,7 +132,7 @@ public class Switch {
        nodeInfo.add(1,words[1+(i*4)+2]);
        nodeInfo.add(2,words[1+(i*4)+3]);
        neighbors.put(Integer.parseInt(id), nodeInfo);
-       neighborStatus.put(Integer.parseInt(id), -1);
+       neighborStatus.put(Integer.parseInt(id), 0);
      }
 
      return true;
