@@ -8,12 +8,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.LinkedList;
-//import org.junit.experimental.theories.Theories;
-//import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
-
-//import Dijkstra.Edge;
-//import Dijkstra.Vertex;
-//import ReadFile.Read;
 
 public class udp_server {
     public static List<Vertex> nodes = new ArrayList<Vertex>();
@@ -98,7 +92,7 @@ public class udp_server {
                     for(String tab:routing_tab){
                          System.out.println(tab);
                     }
-                   
+
                     for(int i = 0; i < routing_tab.size(); i++) {
                         String ans =  "3" + " ";
                         ans += routing_tab.get(i);
@@ -117,7 +111,7 @@ public class udp_server {
                     System.out.println("update topo request received");
                     String id = message[1];
                     if(!update_routing_mes[Integer.valueOf(id) - 1].equals(s)) {
-                        
+
                     ArrayList<String> unreachable = new ArrayList<>();
                     for(int i = 1; i * 2 < message.length - 1; i++) {
                         int index = 2 * i;
@@ -128,8 +122,8 @@ public class udp_server {
                     System.out.println("start processing new topo message");
                     ArrayList<Edge>edges_copy = new ArrayList<Edge>();
                     edges_copy.addAll(edges);
-                   
-                   
+
+
                         for(String destination: unreachable) {
                             for(int i = 0; i < edges_copy.size(); i++) {
                                 String start = edges_copy.get(i).getDestination().getId();
@@ -143,8 +137,8 @@ public class udp_server {
                         System.out.println(edges);
                         System.out.println(edges_copy);
                         ArrayList<String> routing_tab = new ArrayList<>();
-                        
-                        
+
+
                         Graph graph = new Graph(nodes, edges_copy);
                          for(int i = 0; i < nodes.size() ; i++) {
                                 DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
@@ -157,7 +151,7 @@ public class udp_server {
                                         routing_tab.set(i, mes);
                                         System.out.println("the path from source " + (i + 1) +" to destination " + (j + 1) + "is: ");
                                         System.out.println("null");
-                                        
+
                                     }
                                     else if(path.size() > 0){
                                         String mes = routing_tab.get(i)  + path.get(1).getId()+ " ";
@@ -165,13 +159,13 @@ public class udp_server {
                                         System.out.println("the path from source " + (i + 1) +" to destination " + (j + 1) + "is: ");
                                         for (Vertex vertex : path) {
                                             System.out.print("Node: "+ vertex.getId());
-                                            System.out.print(" ");   
+                                            System.out.print(" ");
                                         }
-                                        System.out.println(""); 
+                                        System.out.println("");
                                     }
                                 }
                             }
-                         
+
                          for(int i = 0; i < routing_tab.size(); i++) {
                             String ans = "3" + " ";
                             ans += routing_tab.get(i);
@@ -180,7 +174,7 @@ public class udp_server {
                             DatagramPacket dp = new DatagramPacket(ans.getBytes() , ans.getBytes().length , InetAddress.getByName(hostAddress[i]) , Integer.valueOf(port[i]));
                              sock.send(dp);
                         }
-                        count++; 
+                        count++;
                         update_routing_mes[Integer.valueOf(id) - 1] = s;
                     }
                 }

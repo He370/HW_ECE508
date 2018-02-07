@@ -1,5 +1,3 @@
-//package ReadFile;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,11 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.text.AbstractDocument.Content;
-
-//import Dijkstra.DijkstraAlgorithm;
-//import Dijkstra.Edge;
-//import Dijkstra.Graph;
-//import Dijkstra.Vertex;
 
 public class Read {
 	List<Vertex> nodes;
@@ -53,24 +46,6 @@ public class Read {
 	        	neighbors.get(end).add(start);
 	        }
 	        return neighbors;
-	        // for(int r = 0; r < answer.size(); r++) {
-	        // 	String[] row = answer.get(r).split(" ");
-	        // 	int start = Integer.valueOf(row[0]) ;
-	        // 	int end = Integer.valueOf(row[1]);
-	        // 	if(start >= top) top = start;
-	        // 	if(end >= top) top = end;
-	        // }
-	        // for(int i = 0; i <= top; i++) {
-	        // 	neighbors.put(String.valueOf(i), new HashSet<String>());
-	        // }
-	        // for(int r = 0; r < answer.size(); r++) {
-	        // 	String[] row = answer.get(r).split(" ");
-	        // 	String start = (row[0]) ;
-	        // 	String end = (row[1]);
-	        // 	neighbors.get(start).add(end);
-	        // 	neighbors.get(end).add(start);
-	        // }
-	        // return neighbors;
 	}
 	public ArrayList<String> read() throws IOException {
 		ArrayList<String> routing_tab = new ArrayList<>();
@@ -84,24 +59,6 @@ public class Read {
 	        {
 	        	answer.add(str);
 	        }
-	    //     for(int r = 0; r < answer.size(); r++) {
-	    //     	String[] row = answer.get(r).split(" ");
-	    //     	int start = Integer.valueOf(row[0]) ;
-	    //     	int end = Integer.valueOf(row[1]);
-	    //     	if(start >= top) top = start;
-	    //     	if(end >= top) top = end;
-
-	    //     }
-
-	    // for(int i = 0; i <= top; i++) {
-	    //     	Vertex location = new Vertex(String.valueOf(i), "Node_" + i);
-	    //         nodes.add(location);
-	    // }
-     //    for(int r = 0; r < answer.size(); r++) {
-     //    	String[] row = answer.get(r).split(" ");
-     //    	addLane(Integer.valueOf(row[0]), Integer.valueOf(row[1]), Integer.valueOf(row[2]));
-     //    	addLane(Integer.valueOf(row[1]), Integer.valueOf(row[0]), Integer.valueOf(row[2]));
-     //    }
 	    top = Integer.valueOf(answer.get(0));
 	    for(int i = 1; i <= top; i++) {
 	        	Vertex location = new Vertex(String.valueOf(i), "Node_" + i);

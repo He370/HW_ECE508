@@ -1,4 +1,3 @@
-//package Dijkstra;
 import java.util.*;
 public class Graph {
     private final List<Vertex> vertexes;

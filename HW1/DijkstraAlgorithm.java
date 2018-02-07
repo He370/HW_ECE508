@@ -1,5 +1,5 @@
-//package Dijkstra;
 import java.util.*;
+
 public class DijkstraAlgorithm {
     private Set<Vertex> visited;
     private Set<Vertex> unvisited;
@@ -7,7 +7,7 @@ public class DijkstraAlgorithm {
     private Map<Vertex, Integer> distance;
     private final List<Vertex> nodes;
     private final List<Edge> edges;
-    
+
     public DijkstraAlgorithm(Graph graph) {
         this.nodes = new ArrayList<Vertex>(graph.getVertexes());
         this.edges = new ArrayList<Edge>(graph.getEdges());
@@ -75,7 +75,7 @@ public class DijkstraAlgorithm {
         return neighbors;
     }
 
-    
+
 
     private boolean isSettled(Vertex vertex) {
         return visited.contains(vertex);

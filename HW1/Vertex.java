@@ -1,5 +1,3 @@
-//package Dijkstra;
-
 public class Vertex {
     public  String id;
     public  String name;
