@@ -104,6 +104,67 @@ public class udp_server {
                 	}
                     count++;
                 }
+                 /////////////////////////////////////////////////////////////////////////////////////////
+                if(message[0].equals("4")) {
+                    String id = message[1];
+                    ArrayList<String> unreach = new ArrayList<>();
+                    for(int i = 1; i * 2 < message.length - 1; i++) {
+                        int index = 2 * i;
+                        if(message[index + 1].equals("0")) {
+                            unreach.add(message[index]);
+                        }
+                    }
+                    if(unreach != null || unreach.size() > 0) {
+                        for(String destination: unreach) {
+                            for(int i = 0; i < edges.size(); i++) {
+                                String start = edges.get(i).getDestination().getId();
+                                String end = edges.get(i).getSource().getId();
+                                if(((start.equals(id)) && (end.equals(destination)))||((start.equals(destination)) && (end.equals(id)))){
+                                    edges.remove(i);
+                                }
+                            }
+                        }
+                        ArrayList<String> routing_tab = new ArrayList<>();
+                        Graph graph = new Graph(nodes, edges);
+                         for(int i = 0; i < nodes.size() ; i++) {
+                                DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
+                                dijkstra.execute(nodes.get(i));
+                                routing_tab.add("");
+                                for(int j = 0; j < nodes.size(); j++) {
+                                    LinkedList<Vertex> path = dijkstra.getPath(nodes.get(j));
+                                    if(path == null) {
+                                        String mes = routing_tab.get(i)  + "-1"+ " ";
+                                        routing_tab.set(i, mes);
+                                        System.out.println("the path from source " + i +" to destination " + j + "is: ");
+                                        System.out.println("null");
+                                        
+                                    }
+                                    else if(path.size() > 0){
+                                        String mes = routing_tab.get(i)  + path.get(1).getId()+ " ";
+                                        routing_tab.set(i, mes);
+                                        System.out.println("the path from source " + i +" to destination " + j + "is: ");
+                                        for (Vertex vertex : path) {
+                                            System.out.print("Node: "+ vertex.getId());
+                                            System.out.print(" ");   
+                                        }
+                                        System.out.println(""); 
+                                    }
+                                }
+                            }
+                         for(int i = 0; i < routing_tab.size(); i++) {
+                            String ans = "3" + " ";
+                            ans += routing_tab.get(i);
+                            ans += "EOF";
+                            System.out.println(ans);
+                            DatagramPacket dp = new DatagramPacket(ans.getBytes() , ans.getBytes().length , InetAddress.getByName(hostAddress[i]) , Integer.valueOf(port[i]));
+                             sock.send(dp);
+                        }
+                        count++; 
+                           
+                    }
+                    
+                }
+                //////////////////////////////////////////////////////////////////////////////////////////////
             }
         }
 
