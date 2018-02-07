@@ -31,7 +31,7 @@ public class Read {
 	public Hashtable<String, HashSet<String>> getNeighbors() throws IOException{
 		Hashtable<String, HashSet<String>> neighbors = new Hashtable<>();
 		ArrayList<String> answer = new ArrayList<>();
-		String filePath = "test.txt";
+		String filePath = "test2.txt";
 		 File file = new File(filePath);
 		 FileInputStream inputStream = new FileInputStream(filePath);
 	     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -75,7 +75,7 @@ public class Read {
 	public ArrayList<String> read() throws IOException {
 		ArrayList<String> routing_tab = new ArrayList<>();
 		ArrayList<String> answer = new ArrayList<>();
-		String filePath = "test.txt";
+		String filePath = "test2.txt";
 		 File file = new File(filePath);
 		 FileInputStream inputStream = new FileInputStream(filePath);
 	     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
