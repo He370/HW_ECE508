@@ -20,7 +20,9 @@ class SwitchSockHandler extends Thread {
   public void run () {
     try {
       while (true) {
-        System.out.println("[Receiver]Sock is ready to receive:");
+        if(Switch.logType==3||Switch.logType==4){
+          System.out.println("[Receiver]Sock is ready to receive:");
+        }
         byte[] packetBuffer = new byte[65536];
         DatagramPacket responsePacket = new DatagramPacket(packetBuffer, packetBuffer.length);
         sock.receive(responsePacket);
@@ -28,7 +30,7 @@ class SwitchSockHandler extends Thread {
       }
     }
     catch (Exception e) {
-      System.err.println("Exception caught:" + e);
+      System.err.println("[Receiver]Exception caught:" + e);
     }
   }
 
@@ -36,11 +38,13 @@ class SwitchSockHandler extends Thread {
     byte[] responseData = responsePacket.getData();
     String registerResponse= new String(responseData, 0, responsePacket.getLength());
 
-    System.out.println("[Receiver]Response:"+registerResponse);
+    //System.out.println("[Receiver]Response:"+registerResponse);
     String[] words = registerResponse.split(" ");
 
     if(words[0].equals("2")){
-      System.out.println("[Receiver]Receive KEEP_ALIVE from "+ words[1]);
+      if(Switch.logType==3||Switch.logType==4){
+        System.out.println("[Receiver]Receive KEEP_ALIVE from "+ words[1]);
+      }
       int id = Integer.parseInt(words[1]);
       Switch.neighborStatus.put(id,0);
       ArrayList<String> nodeInfo = Switch.neighbors.get(id);
@@ -48,8 +52,16 @@ class SwitchSockHandler extends Thread {
       nodeInfo.set(1,Integer.toString(responsePacket.getPort()));
       Switch.neighbors.put(id,nodeInfo);
     }
-    else if(words[1].equals("3")){
 
+    if(words[0].equals("3")){
+      if(Switch.logType==1||Switch.logType==3){
+        System.out.println("[Receiver]Receive ROUTE_UPDATE :"+ registerResponse);
+      }
+      int num = words.length-2;
+
+      for(int i=0; i<num; i++){
+        Switch.routeTable.put(i,Integer.parseInt(words[i+1]));
+      }
     }
   }
 

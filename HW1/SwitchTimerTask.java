@@ -20,7 +20,7 @@ class SwitchTimerTask extends TimerTask {
   }
   public void run() {
 
-    System.out.println("[Sender]Sending..." + hostName);
+    //System.out.println("[Sender]Sending..." + hostName);
     Set<Integer> ids = Switch.neighbors.keySet();
 
     String topologyUpdate = "4 "+ Integer.toString(Switch.switchID) + " ";
@@ -37,8 +37,11 @@ class SwitchTimerTask extends TimerTask {
     topologyUpdate = topologyUpdate + "EOF\n";
 
     try{
-      System.out.println("[Sender]Sending TopologyUpdate to Controller!");
-      System.out.println("[Sender]TopologyUpdate:" + topologyUpdate);
+      if(Switch.logType==2||Switch.logType==4){
+        System.out.println("[Sender]Sending TopologyUpdate to Controller!");
+        System.out.println("[Sender]TopologyUpdate:" + topologyUpdate);
+      }
+
       InetAddress nodeHost = InetAddress.getByName(hostName);
       int nodePort = 5000;
 
@@ -55,8 +58,10 @@ class SwitchTimerTask extends TimerTask {
       try{
         ArrayList<String> nodeInfo = Switch.neighbors.get(id);
 
-        if(nodeInfo.get(1).equals("NULL")==false){
-          System.out.println("[Sender]Sending KEEP_ALIVE to node "+ Integer.toString(id) + " | " + nodeInfo.get(0));
+        if(nodeInfo.get(1).equals("NULL")==false&&Switch.blockStatus.get(id)==1){
+          if(Switch.logType==2||Switch.logType==4){
+            System.out.println("[Sender]Sending KEEP_ALIVE to node "+ Integer.toString(id) + " | " + nodeInfo.get(0));
+          }
           InetAddress nodeHost = InetAddress.getByName(nodeInfo.get(0));
           int nodePort = Integer.parseInt(nodeInfo.get(1));
 
