@@ -154,13 +154,22 @@ public class Switch {
    }
 
    private static void printNeighbors(){
-
-
+     Set<Integer> ids = neighbors.keySet();
+     int i = 1;
+     for(Integer id : ids){
+       ArrayList<String> nodeInfo = neighbors.get(id);
+       System.out.println ("Neighbor"+ Integer.toString(i)+": ID:" + Integer.toString(id) + " Name:"+ nodeInfo.get(0) + " Port:" + nodeInfo.get(1)
+                              + " Status:" + Integer.toString(neighborStatus.get(id)) + " Blocked:" + Integer.toString(blockStatus.get(id)));
+       i += 1;
+     }
    }
 
    private static void printRoutingTable(){
-
-
+     System.out.println ("Next Node | Dest Node");
+     Set<Integer> ids = routeTable.keySet();
+     for(Integer id : ids){
+       System.out.println ( Integer.toString(routeTable.get(id)) +  "  |  " + Integer.toString(id));
+     }
    }
 
    // neighbors format: "1 id1 127.0.0.1 2000 1 id2 ..... EOF/n"

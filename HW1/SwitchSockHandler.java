@@ -58,9 +58,8 @@ class SwitchSockHandler extends Thread {
         System.out.println("[Receiver]Receive ROUTE_UPDATE :"+ registerResponse);
       }
       int num = words.length-2;
-
-      for(int i=0; i<num; i++){
-        Switch.routeTable.put(i,Integer.parseInt(words[i+1]));
+      for(int i=1; i<num+1; i++){
+        Switch.routeTable.put(i,Integer.parseInt(words[i]));
       }
     }
   }

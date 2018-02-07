@@ -1,8 +1,3 @@
-Controller:
-1. javac Controller.java
-2. jar cvfm Controller.jar manifest.txt Controller.class Message.class
-3. java -cp Controller.jar Controller
-
 Switch:
 1. javac Switch.java
 2. jar cvfm Switch.jar manifest_switch.txt Switch.class SwitchSockHandler.class SwitchTimerTask.class
