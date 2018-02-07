@@ -1,34 +1,33 @@
 //package Dijkstra;
 import java.util.*;
 public class DijkstraAlgorithm {
-
+    private Set<Vertex> visited;
+    private Set<Vertex> unvisited;
+    private Map<Vertex, Vertex> pre;
+    private Map<Vertex, Integer> distance;
     private final List<Vertex> nodes;
     private final List<Edge> edges;
-    private Set<Vertex> settledNodes;
-    private Set<Vertex> unSettledNodes;
-    private Map<Vertex, Vertex> predecessors;
-    private Map<Vertex, Integer> distance;
-
+    
     public DijkstraAlgorithm(Graph graph) {
         this.nodes = new ArrayList<Vertex>(graph.getVertexes());
         this.edges = new ArrayList<Edge>(graph.getEdges());
     }
 
-    public void execute(Vertex source) {
-        settledNodes = new HashSet<Vertex>();
-        unSettledNodes = new HashSet<Vertex>();
+    public void run_dij(Vertex start) {
+        visited = new HashSet<Vertex>();
+        unvisited = new HashSet<Vertex>();
         distance = new HashMap<Vertex, Integer>();
-        predecessors = new HashMap<Vertex, Vertex>();
-        distance.put(source, 0);
-        unSettledNodes.add(source);
-        while (unSettledNodes.size() > 0) {
-            Vertex node = getMinimum(unSettledNodes);
-            settledNodes.add(node);
-            unSettledNodes.remove(node);
+        pre = new HashMap<Vertex, Vertex>();
+        distance.put(start, 0);
+        unvisited.add(start);
+        while (unvisited.size() > 0) {
+            Vertex node = get_min(unvisited);
+            visited.add(node);
+            unvisited.remove(node);
             findMinimalDistances(node);
         }
     }
-    private Vertex getMinimum(Set<Vertex> vertexes) {
+    private Vertex get_min(Set<Vertex> vertexes) {
         Vertex minimum = null;
         for (Vertex vertex : vertexes) {
             if (minimum == null) {
@@ -48,8 +47,8 @@ public class DijkstraAlgorithm {
                     + getDistance(node, target)) {
                 distance.put(target, getShortestDistance(node)
                         + getDistance(node, target));
-                predecessors.put(target, node);
-                unSettledNodes.add(target);
+                pre.put(target, node);
+                unvisited.add(target);
             }
         }
 
@@ -76,10 +75,10 @@ public class DijkstraAlgorithm {
         return neighbors;
     }
 
-
+    
 
     private boolean isSettled(Vertex vertex) {
-        return settledNodes.contains(vertex);
+        return visited.contains(vertex);
     }
 
     private int getShortestDistance(Vertex destination) {
@@ -94,12 +93,12 @@ public class DijkstraAlgorithm {
     public LinkedList<Vertex> getPath(Vertex target) {
         LinkedList<Vertex> path = new LinkedList<Vertex>();
         Vertex step = target;
-        if (predecessors.get(step) == null) {
+        if (pre.get(step) == null) {
             return null;
         }
         path.add(step);
-        while (predecessors.get(step) != null) {
-            step = predecessors.get(step);
+        while (pre.get(step) != null) {
+            step = pre.get(step);
             path.add(step);
         }
         Collections.reverse(path);

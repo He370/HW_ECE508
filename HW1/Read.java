@@ -93,7 +93,7 @@ public class Read {
         Graph graph = new Graph(nodes, edges);
         for(int i = 0; i <= top ; i++) {
         	DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
-        	dijkstra.execute(nodes.get(i));
+        	dijkstra.run_dij(nodes.get(i));
         	routing_tab.add("");
         	for(int j = 0; j <= top; j++) {
        	        LinkedList<Vertex> path = dijkstra.getPath(nodes.get(j));
