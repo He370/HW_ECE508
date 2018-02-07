@@ -132,8 +132,13 @@ public class Switch {
        nodeInfo.add(1,words[1+(i*4)+2]);
        nodeInfo.add(2,words[1+(i*4)+3]);
        neighbors.put(Integer.parseInt(id), nodeInfo);
-       neighborStatus.put(Integer.parseInt(id), 0);
-       //if(words[1+(i*4)+3].equals.)
+
+       if(words[1+(i*4)+3].equals("0")){
+         neighborStatus.put(Integer.parseInt(id), 5);
+       }
+       else{
+         neighborStatus.put(Integer.parseInt(id), 0);
+       }
      }
 
      return true;
