@@ -24,7 +24,7 @@ public class udp_server {
     public static String[] alive;
     public static int count = 0;
     public static String[] update_routing_mes;
-    
+
     public static void main(String args[]) throws IOException
     {
         Read reader = new Read(nodes, edges);
@@ -136,6 +136,7 @@ public class udp_server {
                                 String end = edges_copy.get(i).getSource().getId();
                                 if(((start.equals(id)) && (end.equals(destination)))||((start.equals(destination)) && (end.equals(id)))){
                                     edges_copy.remove(i);
+                                    i--;
                                 }
                             }
                         }
