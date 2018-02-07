@@ -26,7 +26,8 @@ class SwitchTimerTask extends TimerTask {
     String topologyUpdate = "4 "+ Integer.toString(Switch.switchID) + " ";
     for(Integer id : ids){
       int time = Switch.neighborStatus.get(id);
-      if(time>=5){
+      int block = Switch.blockStatus.get(id);
+      if(time>=5||block==0){
         topologyUpdate = topologyUpdate + Integer.toString(id) + " 0 ";
       }
       else{
