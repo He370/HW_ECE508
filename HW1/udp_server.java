@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Handler;
+import java.util.LinkedList;
 //import org.junit.experimental.theories.Theories;
 //import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 
@@ -105,9 +106,12 @@ public class udp_server {
                     count++;
                 }
                  /////////////////////////////////////////////////////////////////////////////////////////
-                if(message[0].equals("4")) {
+
+                if(count > 0 && message[0].equals("4")) {
+                    System.out.println("receiving dis_connect message");
                     String id = message[1];
                     ArrayList<String> unreach = new ArrayList<>();
+
                     for(int i = 1; i * 2 < message.length - 1; i++) {
                         int index = 2 * i;
                         if(message[index + 1].equals("0")) {
