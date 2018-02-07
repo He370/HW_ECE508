@@ -16,29 +16,35 @@ import java.util.LinkedList;
 //import ReadFile.Read;
 
 public class udp_server {
-	public static List<Vertex> nodes = new ArrayList<Vertex>();
-	public static List<Edge> edges = new ArrayList<Edge>();
-	public static Hashtable<String, HashSet<String>> neighbors;
-	public static String[] hostAddress;
-	public static String[] port;
-	public static String[] alive;
-	public static int count = 0;
-	public static void main(String args[]) throws IOException
+    public static List<Vertex> nodes = new ArrayList<Vertex>();
+    public static List<Edge> edges = new ArrayList<Edge>();
+    public static Hashtable<String, HashSet<String>> neighbors;
+    public static String[] hostAddress;
+    public static String[] port;
+    public static String[] alive;
+    public static int count = 0;
+    public static String[] update_routing_mes;
+    
+    public static void main(String args[]) throws IOException
     {
-		Read reader = new Read(nodes, edges);
-		neighbors = reader.getNeighbors();
-		hostAddress = new String[neighbors.size()];
-		for(int i = 0; i < neighbors.size(); i++) {
-			hostAddress[i] = "NULL";
-		}
-		port = new String[neighbors.size()];
-		for(int i = 0; i < neighbors.size(); i++) {
-			port[i] = "NULL";
-		}
-		alive = new String[neighbors.size()];
-		for(int i = 0; i < neighbors.size(); i++) {
-			alive[i] = "0";
-		}
+        Read reader = new Read(nodes, edges);
+        neighbors = reader.getNeighbors();
+        hostAddress = new String[neighbors.size()];
+        update_routing_mes = new String[neighbors.size()];
+        for(int i = 0; i < neighbors.size(); i++) {
+            hostAddress[i] = "NULL";
+        }
+        port = new String[neighbors.size()];
+        for(int i = 0; i < neighbors.size(); i++) {
+            port[i] = "NULL";
+        }
+        alive = new String[neighbors.size()];
+        for(int i = 0; i < neighbors.size(); i++) {
+            alive[i] = "0";
+        }
+        for(int i = 0; i < neighbors.size(); i++) {
+            update_routing_mes[i] = "NULL";
+        }
         DatagramSocket sock = null;
 
         try
@@ -59,77 +65,86 @@ public class udp_server {
                 String[] message = s.split(" ");
                 String answer = "";
 
-								echo("msg:"+message[0]);
+                                echo("msg:"+message[0]);
 
                 if(message[0].equals("0")) {
-                	answer +=  "1" + " ";
-                	String id = message[1];
+                    answer +=  "1" + " ";
+                    String id = message[1];
 
-					hostAddress[Integer.valueOf(id) - 1] = incoming.getAddress().getHostAddress();
-                	port[Integer.valueOf(id) - 1] = String.valueOf(incoming.getPort());
-                	alive[Integer.valueOf(id) - 1] = "1";
-                	HashSet<String> neighbor = neighbors.get(id);
-                	for(String n: neighbor) {
-                		int n_id = Integer.valueOf(n);
+                    hostAddress[Integer.valueOf(id) - 1] = incoming.getAddress().getHostAddress();
+                    port[Integer.valueOf(id) - 1] = String.valueOf(incoming.getPort());
+                    alive[Integer.valueOf(id) - 1] = "1";
+                    HashSet<String> neighbor = neighbors.get(id);
+                    for(String n: neighbor) {
+                        int n_id = Integer.valueOf(n);
                         answer = answer + n + " ";
-                		answer = answer + hostAddress[n_id - 1] + " ";
-                		answer = answer + port[n_id - 1] + " ";
-                		answer = answer + alive[n_id - 1] + " ";
-                	}
-                	answer += "EOF";
-				echo("ans:" + answer);
-                	DatagramPacket dp = new DatagramPacket(answer.getBytes() , answer.getBytes().length , incoming.getAddress() , incoming.getPort());
+                        answer = answer + hostAddress[n_id - 1] + " ";
+                        answer = answer + port[n_id - 1] + " ";
+                        answer = answer + alive[n_id - 1] + " ";
+                    }
+                    answer += "EOF";
+                echo("ans:" + answer);
+                    DatagramPacket dp = new DatagramPacket(answer.getBytes() , answer.getBytes().length , incoming.getAddress() , incoming.getPort());
                   sock.send(dp);
                 }
                 String all = "1";
                 for(String a: alive) {
-                	if(a.equals("0")) {
-                		all = "0";
-                	}
+                    if(a.equals("0")) {
+                        all = "0";
+                    }
                 }
                 if(count == 0 && all.equals("1")) {
-                	ArrayList<String> routing_tab = reader.read();
+                    ArrayList<String> routing_tab = reader.read();
                     for(String tab:routing_tab){
                          System.out.println(tab);
                     }
                    
-                	for(int i = 0; i < routing_tab.size(); i++) {
-                		String ans =  "3" + " ";
-                		ans += routing_tab.get(i);
-                		ans += "EOF";
+                    for(int i = 0; i < routing_tab.size(); i++) {
+                        String ans =  "3" + " ";
+                        ans += routing_tab.get(i);
+                        ans += "EOF";
                         System.out.println(ans);
                         System.out.println(InetAddress.getByName(hostAddress[i]));
-                		DatagramPacket dp = new DatagramPacket(ans.getBytes() , ans.getBytes().length , InetAddress.getByName(hostAddress[i]) , Integer.valueOf(port[i]));
+                        DatagramPacket dp = new DatagramPacket(ans.getBytes() , ans.getBytes().length , InetAddress.getByName(hostAddress[i]) , Integer.valueOf(port[i]));
                         System.out.println(Integer.valueOf(port[i]));
                         sock.send(dp);
-                	}
+                    }
                     count++;
                 }
                  /////////////////////////////////////////////////////////////////////////////////////////
 
-                if(count > 0 && message[0].equals("4")) {
-                    System.out.println("receiving dis_connect message from Switch:");
+                 if(count > 0 && message[0].equals("4")) {
+                    System.out.println("update topo request received");
                     String id = message[1];
-                    ArrayList<String> unreach = new ArrayList<>();
-
+                    if(!update_routing_mes[Integer.valueOf(id) - 1].equals(s)) {
+                        
+                    ArrayList<String> unreachable = new ArrayList<>();
                     for(int i = 1; i * 2 < message.length - 1; i++) {
                         int index = 2 * i;
                         if(message[index + 1].equals("0")) {
-                            unreach.add(message[index]);
+                            unreachable.add(message[index]);
                         }
                     }
-                    if(unreach != null || unreach.size() > 0) {
-                        for(String destination: unreach) {
-                            for(int i = 0; i < edges.size(); i++) {
-                                String start = edges.get(i).getDestination().getId();
-                                String end = edges.get(i).getSource().getId();
+                    System.out.println("start processing new topo message");
+                    ArrayList<Edge>edges_copy = new ArrayList<Edge>();
+                    edges_copy.addAll(edges);
+                   
+                   
+                        for(String destination: unreachable) {
+                            for(int i = 0; i < edges_copy.size(); i++) {
+                                String start = edges_copy.get(i).getDestination().getId();
+                                String end = edges_copy.get(i).getSource().getId();
                                 if(((start.equals(id)) && (end.equals(destination)))||((start.equals(destination)) && (end.equals(id)))){
-                                    edges.remove(i);
+                                    edges_copy.remove(i);
                                 }
                             }
                         }
+                        System.out.println(edges);
+                        System.out.println(edges_copy);
                         ArrayList<String> routing_tab = new ArrayList<>();
-                        Graph graph = new Graph(nodes, edges);
+                        
+                        
+                        Graph graph = new Graph(nodes, edges_copy);
                          for(int i = 0; i < nodes.size() ; i++) {
                                 DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
                                 dijkstra.run_dij(nodes.get(i));
@@ -155,8 +170,9 @@ public class udp_server {
                                     }
                                 }
                             }
+                         
                          for(int i = 0; i < routing_tab.size(); i++) {
-                            String ans =   "3" + " ";
+                            String ans = "3" + " ";
                             ans += routing_tab.get(i);
                             ans += "EOF";
                             System.out.println(ans);
@@ -164,9 +180,8 @@ public class udp_server {
                              sock.send(dp);
                         }
                         count++; 
-                           
+                        update_routing_mes[Integer.valueOf(id) - 1] = s;
                     }
-                    
                 }
                 //////////////////////////////////////////////////////////////////////////////////////////////
             }
