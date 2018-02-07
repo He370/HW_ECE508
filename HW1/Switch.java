@@ -14,7 +14,7 @@ import java.util.Set;
 public class Switch {
    private static int activeFlag = 1;
    public static int switchID;
-   private static int switchPort;
+   public static int switchPort;
 
    private static DatagramSocket udpSock = null;
    //private static DatagramSocket senderSock = null;
@@ -65,7 +65,7 @@ public class Switch {
              switchRegistered = 1;
            }
          } catch (Exception e) {
-             System.err.println("Exception caught:" + e);
+             System.err.println("Exception caught1:" + e);
              System.exit(1);
          }
        }
@@ -98,16 +98,16 @@ public class Switch {
          while(true)
          {
              //take input and send the packet
-             System.out.println ("[Switch Console ID("+ Integer.toString(switchID) +")]>>");
+             System.out.println ("[Console][ID("+ Integer.toString(switchID) +")]>>");
              String command = (String)cin.readLine();
              //echo the details of incoming data - client ip : client port - client message
-             System.out.println ("[Switch Console ID("+ Integer.toString(switchID) +")]>>");
+             //System.out.println ("[ConsoleID("+ Integer.toString(switchID) +")]>>");
          }
      }
 
      catch(IOException e)
      {
-         System.err.println("IOException " + e);
+         System.err.println("[Console]IOException " + e);
      }
 
    }
@@ -132,7 +132,7 @@ public class Switch {
        nodeInfo.add(1,words[1+(i*4)+2]);
        nodeInfo.add(2,words[1+(i*4)+3]);
        neighbors.put(Integer.parseInt(id), nodeInfo);
-       neighborStatus.put(Integer.parseInt(id), -1);
+       neighborStatus.put(Integer.parseInt(id), 0);
      }
 
      return true;
