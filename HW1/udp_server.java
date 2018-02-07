@@ -62,7 +62,7 @@ public class udp_server {
 								echo("msg:"+message[0]);
 
                 if(message[0].equals("0")) {
-                	answer += "responding from Server: " + "1" + " ";
+                	answer +=  "1" + " ";
                 	String id = message[1];
 
 					hostAddress[Integer.valueOf(id) - 1] = incoming.getAddress().getHostAddress();
@@ -94,7 +94,7 @@ public class udp_server {
                     }
                    
                 	for(int i = 0; i < routing_tab.size(); i++) {
-                		String ans = "responding from Server: " + "3" + " ";
+                		String ans =  "3" + " ";
                 		ans += routing_tab.get(i);
                 		ans += "EOF";
                         System.out.println(ans);
@@ -156,7 +156,7 @@ public class udp_server {
                                 }
                             }
                          for(int i = 0; i < routing_tab.size(); i++) {
-                            String ans = "Rerouting table is: " + "3" + " ";
+                            String ans =   "3" + " ";
                             ans += routing_tab.get(i);
                             ans += "EOF";
                             System.out.println(ans);

@@ -40,7 +40,8 @@ public class Read {
 	        {
 	        	answer.add(str);
 	        }
-	         top = Integer.valueOf(answer.get(0));
+	        top = Integer.valueOf(answer.get(0));
+	        System.out.println(top);
 	        for(int i = 1; i <= top; i++) {
 	        	neighbors.put(String.valueOf(i), new HashSet<String>());
 	        }
@@ -145,7 +146,7 @@ public class Read {
 
 	public void addLane(int sourceLocNo, int destLocNo,
 	            int duration) {
-	        Edge lane = new Edge(nodes.get(sourceLocNo), nodes.get(destLocNo), duration);
+	        Edge lane = new Edge(nodes.get(sourceLocNo - 1), nodes.get(destLocNo - 1), duration);
 	        edges.add(lane);
 	    }
 
