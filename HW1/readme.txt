@@ -44,3 +44,9 @@ each switch has a console to interact with
 
 3> block link
 "b id" block the link to Switch whose ID is id
+
+4> send message
+"s id hello!"
+
+5> kill process and close socket
+"k"
