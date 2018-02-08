@@ -8,6 +8,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.LinkedList;
+//import org.junit.experimental.theories.Theories;
+//import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
+
+//import Dijkstra.Edge;
+//import Dijkstra.Vertex;
+//import ReadFile.Read;
 
 public class udp_server {
     public static List<Vertex> nodes = new ArrayList<Vertex>();
@@ -116,12 +122,8 @@ public class udp_server {
                     System.out.println("update topo request received");
                     String id = message[1];
                     if(!update_routing_mes[Integer.valueOf(id) - 1].equals(s)) {
-<<<<<<< HEAD
                     count++;
                     update_routing_mes[Integer.valueOf(id) - 1] = s;
-=======
-
->>>>>>> 1218c849ff850392f98c115bb45139f5adbd8f62
                     ArrayList<String> unreachable = new ArrayList<>();
                     for(int i = 1; i * 2 < message.length - 1; i++) {
                         int index = 2 * i;
@@ -135,7 +137,6 @@ public class udp_server {
                     System.out.println("start processing new topo message");
                     ArrayList<Edge>edges_copy = new ArrayList<Edge>();
                     edges_copy.addAll(edges);
-<<<<<<< HEAD
                     
                           // String start = edges_copy.get(i).getDestination().getId();
                           // String end = edges_copy.get(i).getSource().getId();
@@ -154,18 +155,6 @@ public class udp_server {
                                      edges_copy.remove(j);
                                      j--;
                                  }
-=======
-
-
-                        for(String destination: unreachable) {
-                            for(int i = 0; i < edges_copy.size(); i++) {
-                                String start = edges_copy.get(i).getDestination().getId();
-                                String end = edges_copy.get(i).getSource().getId();
-                                if(((start.equals(id)) && (end.equals(destination)))||((start.equals(destination)) && (end.equals(id)))){
-                                    edges_copy.remove(i);
-                                    i--;
-                                }
->>>>>>> 1218c849ff850392f98c115bb45139f5adbd8f62
                             }
                         }
                     }
@@ -220,12 +209,7 @@ public class udp_server {
                             DatagramPacket dp = new DatagramPacket(ans.getBytes() , ans.getBytes().length , InetAddress.getByName(hostAddress[i]) , Integer.valueOf(port[i]));
                              sock.send(dp);
                         }
-<<<<<<< HEAD
                         
-=======
-                        count++;
-                        update_routing_mes[Integer.valueOf(id) - 1] = s;
->>>>>>> 1218c849ff850392f98c115bb45139f5adbd8f62
                     }
                 }
                 //////////////////////////////////////////////////////////////////////////////////////////////
