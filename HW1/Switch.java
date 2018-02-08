@@ -141,6 +141,33 @@ public class Switch {
                }
              }
 
+             // send msg to node 2
+
+             if(words[0].equals("s")){
+               if(words.length!=3){
+                 System.out.println ("[Console]:Invalid input!");
+               }
+               else{
+                 int destID = Integer.parseInt(words[1]);
+                 String msg = "5 " + Integer.toString(switchID) + " " + words[1] + " " + words[2] + " EOF\n";
+
+                 int nextHop = routeTable.get(destID);
+                 if(nextHop==-1){
+                   System.out.println ("[Console]:Cannot find a way to send msg!");
+                 }
+                 else{
+                   ArrayList<String> nodeInfo = neighbors.get(nextHop);
+                   InetAddress nodeHost = InetAddress.getByName(nodeInfo.get(0));
+                   int nodePort = Integer.parseInt(nodeInfo.get(1));
+
+                   byte[] buffer = msg.getBytes();
+                   DatagramPacket  dp = new DatagramPacket(buffer , buffer.length , nodeHost , nodePort);
+                   udpSock.send(dp);
+                   System.out.println ("[Console]:msg sent to hop:" + Integer.toString(nextHop));
+                 }
+               }
+             }
+
              //echo the details of incoming data - client ip : client port - client message
              //System.out.println ("[ConsoleID("+ Integer.toString(switchID) +")]>>");
          }
