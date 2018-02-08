@@ -18,6 +18,7 @@ public class udp_server {
     public static String[] alive;
     public static int count = 0;
     public static String[] update_routing_mes;
+    public static boolean[] isAlive;
 
     public static void main(String args[]) throws IOException
     {
@@ -38,6 +39,10 @@ public class udp_server {
         }
         for(int i = 0; i < neighbors.size(); i++) {
             update_routing_mes[i] = "NULL";
+        }
+        isAlive = new boolean[neighbors.size()];
+        for(int i = 0; i < neighbors.size(); i++) {
+            isAlive[i] = true;
         }
         DatagramSocket sock = null;
 
@@ -111,17 +116,45 @@ public class udp_server {
                     System.out.println("update topo request received");
                     String id = message[1];
                     if(!update_routing_mes[Integer.valueOf(id) - 1].equals(s)) {
+<<<<<<< HEAD
+                    count++;
+                    update_routing_mes[Integer.valueOf(id) - 1] = s;
+=======
 
+>>>>>>> 1218c849ff850392f98c115bb45139f5adbd8f62
                     ArrayList<String> unreachable = new ArrayList<>();
                     for(int i = 1; i * 2 < message.length - 1; i++) {
                         int index = 2 * i;
-                        if(message[index + 1].equals("0")) {
-                            unreachable.add(message[index]);
+                        if(message[index + 1].equals(new String("1"))) {
+                            isAlive[(Integer.valueOf(message[index])) - 1] = true;
+                        }
+                        else if(message[index + 1].equals(new String("0"))) {
+                            isAlive[(Integer.valueOf(message[index])) - 1] = false;
                         }
                     }
                     System.out.println("start processing new topo message");
                     ArrayList<Edge>edges_copy = new ArrayList<Edge>();
                     edges_copy.addAll(edges);
+<<<<<<< HEAD
+                    
+                          // String start = edges_copy.get(i).getDestination().getId();
+                          // String end = edges_copy.get(i).getSource().getId();
+                          // for(int j = 0; j < isAlive.length; j++) {
+                          //     if(!isAlive[Integer.valueOf(end) - 1] || !isAlive[Integer.valueOf(start) - 1]) {
+                          //         edges_copy.remove(i);
+                          //         i--; 
+                          //     }
+                          // }
+                        for(int i = 0; i < isAlive.length; i++) {
+                        if(!isAlive[i]) {
+                            for(int j = 0; j < edges_copy.size(); j++) {
+                                 String start = edges_copy.get(j).getDestination().getId();
+                                 String end = edges_copy.get(j).getSource().getId();
+                                 if((Integer.valueOf(end) - 1 == i) || (Integer.valueOf(start) - 1 == i)) {
+                                     edges_copy.remove(j);
+                                     j--;
+                                 }
+=======
 
 
                         for(String destination: unreachable) {
@@ -132,8 +165,21 @@ public class udp_server {
                                     edges_copy.remove(i);
                                     i--;
                                 }
+>>>>>>> 1218c849ff850392f98c115bb45139f5adbd8f62
                             }
                         }
+                    }
+
+//                        for(String destination: unreachable) {
+//                            for(int i = 0; i < edges_copy.size(); i++) {
+//                                String start = edges_copy.get(i).getDestination().getId();
+//                                String end = edges_copy.get(i).getSource().getId();
+//                                if(((start.equals(id)) && (end.equals(destination)))||((start.equals(destination)) && (end.equals(id)))){
+//                                    edges_copy.remove(i);
+//                                    i--;
+//                                }
+//                            }
+//                        }
                         System.out.println(edges);
                         System.out.println(edges_copy);
                         ArrayList<String> routing_tab = new ArrayList<>();
@@ -174,8 +220,12 @@ public class udp_server {
                             DatagramPacket dp = new DatagramPacket(ans.getBytes() , ans.getBytes().length , InetAddress.getByName(hostAddress[i]) , Integer.valueOf(port[i]));
                              sock.send(dp);
                         }
+<<<<<<< HEAD
+                        
+=======
                         count++;
                         update_routing_mes[Integer.valueOf(id) - 1] = s;
+>>>>>>> 1218c849ff850392f98c115bb45139f5adbd8f62
                     }
                 }
                 //////////////////////////////////////////////////////////////////////////////////////////////
