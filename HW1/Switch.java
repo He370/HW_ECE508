@@ -168,6 +168,11 @@ public class Switch {
                }
              }
 
+             if(words[0].equals("k")){
+               udpSock.close();
+               System.exit(0);
+             }
+
              //echo the details of incoming data - client ip : client port - client message
              //System.out.println ("[ConsoleID("+ Integer.toString(switchID) +")]>>");
          }
